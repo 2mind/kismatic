@@ -193,7 +193,7 @@ func (ae *ansibleExecutor) execute(t task) error {
 	if ae.options.DryRun {
 		return nil
 	}
-	runDirectory, err := ae.createRunDirectory(t.name)
+	runDirectory, err := ae.createRunDirectory(t.name, t.plan.Cluster.Name)
 	if err != nil {
 		return fmt.Errorf("error creating working directory for %q: %v", t.name, err)
 	}
@@ -784,9 +784,13 @@ func (ae *ansibleExecutor) buildClusterCatalog(p *Plan) (*ansible.ClusterCatalog
 	return &cc, nil
 }
 
-func (ae *ansibleExecutor) createRunDirectory(runName string) (string, error) {
+func (ae *ansibleExecutor) createRunDirectory(runName string, clusterName string) (string, error) {
 	start := time.Now()
-	runDirectory := filepath.Join(ae.options.RunsDirectory, runName, start.Format("2006-01-02-15-04-05"))
+	uniqueDirectory := start.Format("2006-01-02-15-04-05")
+	if clusterName != "" {
+		uniqueDirectory = fmt.Sprintf("%s-%s", clusterName, uniqueDirectory)
+	}
+	runDirectory := filepath.Join(ae.options.RunsDirectory, runName, uniqueDirectory)
 	if err := os.MkdirAll(runDirectory, 0777); err != nil {
 		return "", fmt.Errorf("error creating directory: %v", err)
 	}
