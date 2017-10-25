@@ -22,13 +22,13 @@ const defaultRuleSet = `---
 
 # Executables required by kubelet
 - kind: ExecutableInPath
-  when: ["master","worker"]
+  when: ["master|worker|ingress|storage"]
   executable: iptables
 - kind: ExecutableInPath
-  when: ["master","worker"]
+  when: ["master|worker|ingress|storage"]
   executable: iptables-save
 - kind: ExecutableInPath
-  when: ["master","worker"]
+  when: ["master|worker|ingress|storage"]
   executable: iptables-restore
 
 # Ports used by etcd are available
@@ -99,43 +99,43 @@ const defaultRuleSet = `---
 # Ports used by K8s worker are available
 # cAdvisor
 - kind: TCPPortAvailable
-  when: ["master","worker","ingress","storage"]
+  when: ["master|worker|ingress|storage"]
   port: 4194
 # kubelet localhost healthz
 - kind: TCPPortAvailable
-  when: ["master","worker","ingress","storage"]
+  when: ["master|worker|ingress|storage"]
   port: 10248
 # kube-proxy metrics
 - kind: TCPPortAvailable
-  when: ["master","worker","ingress","storage"]
+  when: ["master|worker|ingress|storage"]
   port: 10249
 # kube-proxy health
 - kind: TCPPortAvailable
-  when: ["master","worker","ingress","storage"]
+  when: ["master|worker|ingress|storage"]
   port: 10256
 # kubelet
 - kind: TCPPortAvailable
-  when: ["master","worker","ingress","storage"]
+  when: ["master|worker|ingress|storage"]
   port: 10250
 # kubelet no auth
 - kind: TCPPortAvailable
-  when: ["master","worker","ingress","storage"]
+  when: ["master|worker|ingress|storage"]
   port: 10255
 
 # Ports used by K8s worker are accessible
 # cAdvisor
 - kind: TCPPortAccessible
-  when: ["master","worker","ingress","storage"]
+  when: ["master|worker|ingress|storage"]
   port: 4194
   timeout: 5s
 # kube-proxy
 - kind: TCPPortAccessible
-  when: ["master","worker","ingress","storage"]
+  when: ["master|worker|ingress|storage"]
   port: 10256
   timeout: 5s
 # kubelet
 - kind: TCPPortAccessible
-  when: ["master","worker","ingress","storage"]
+  when: ["master|worker|ingress|storage"]
   port: 10250
   timeout: 5s
 
@@ -165,686 +165,145 @@ const defaultRuleSet = `---
 
 
 - kind: PackageDependency
-  when: ["etcd","ubuntu"]
+  when: ["etcd|master|worker|ingress|storage","ubuntu"]
   packageName: docker-engine
   packageVersion: 1.12.6-0~ubuntu-xenial
 - kind: PackageDependency
-  when: ["master","ubuntu"]
+  when: ["master|worker|ingress|storage","ubuntu"]
   packageName: kubelet
   packageVersion: 1.8.1-00
 - kind: PackageDependency
-  when: ["master","ubuntu"]
+  when: ["master|worker|ingress|storage","ubuntu"]
   packageName: nfs-common
   anyVersion: true
 - kind: PackageDependency
-  when: ["master","ubuntu"]
-  packageName: kubectl
-  packageVersion: 1.8.1-00
-- kind: PackageDependency
-  when: ["master","ubuntu"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-0~ubuntu-xenial
-- kind: PackageDependency
-  when: ["worker","ubuntu"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-0~ubuntu-xenial
-- kind: PackageDependency
-  when: ["ingress","ubuntu"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-0~ubuntu-xenial
-- kind: PackageDependency
-  when: ["storage","ubuntu"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-0~ubuntu-xenial
-- kind: PackageDependency
-  when: ["worker","ubuntu"]
-  packageName: kubelet
-  packageVersion: 1.8.1-00
-- kind: PackageDependency
-  when: ["worker","ubuntu"]
-  packageName: nfs-common
-  anyVersion: true
-- kind: PackageDependency
-  when: ["ingress","ubuntu"]
-  packageName: kubelet
-  packageVersion: 1.8.1-00
-- kind: PackageDependency
-  when: ["ingress","ubuntu"]
-  packageName: nfs-common
-  anyVersion: true
-- kind: PackageDependency
-  when: ["storage","ubuntu"]
-  packageName: kubelet
-  packageVersion: 1.8.1-00
-- kind: PackageDependency
-  when: ["storage","ubuntu"]
-  packageName: nfs-common
-  anyVersion: true
-- kind: PackageDependency
-  when: ["worker","ubuntu"]
-  packageName: kubectl
-  packageVersion: 1.8.1-00
-- kind: PackageDependency
-  when: ["ingress","ubuntu"]
-  packageName: kubectl
-  packageVersion: 1.8.1-00
-- kind: PackageDependency
-  when: ["storage","ubuntu"]
+  when: ["master|worker|ingress|storage","ubuntu"]
   packageName: kubectl
   packageVersion: 1.8.1-00
 # https://docs.docker.com/engine/installation/linux/docker-ee/ubuntu/#uninstall-old-versions
 - kind: PackageDependency
-  when: ["etcd","ubuntu"]
+  when: ["etcd|master|worker|ingress|storage","ubuntu"]
   packageName: docker
   anyVersion: true
   shouldNotBeInstalled: true
 - kind: PackageDependency
-  when: ["master","ubuntu"]
-  packageName: docker
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","ubuntu"]
-  packageName: docker
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","ubuntu"]
-  packageName: docker
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","ubuntu"]
-  packageName: docker
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["etcd","ubuntu"]
+  when: ["etcd|master|worker|ingress|storage","ubuntu"]
   packageName: docker-engine
   anyVersion: true
   shouldNotBeInstalled: true
 - kind: PackageDependency
-  when: ["master","ubuntu"]
-  packageName: docker-engine
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","ubuntu"]
-  packageName: docker-engine
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","ubuntu"]
-  packageName: docker-engine
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","ubuntu"]
-  packageName: docker-engine
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["etcd","ubuntu"]
-  packageName: docker.io
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["master","ubuntu"]
-  packageName: docker.io
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","ubuntu"]
-  packageName: docker.io
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","ubuntu"]
-  packageName: docker.io
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","ubuntu"]
-  packageName: docker.io
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["etcd","ubuntu"]
+  when: ["etcd|master|worker|ingress|storage","ubuntu"]
   packageName: docker-ce
   anyVersion: true
   shouldNotBeInstalled: true
 - kind: PackageDependency
-  when: ["master","ubuntu"]
-  packageName: docker-ce
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","ubuntu"]
-  packageName: docker-ce
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","ubuntu"]
-  packageName: docker-ce
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","ubuntu"]
-  packageName: docker-ce
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["etcd","ubuntu"]
-  packageName: docker-ce
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["master","ubuntu"]
-  packageName: docker-ce
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","ubuntu"]
-  packageName: docker-ce
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","ubuntu"]
-  packageName: docker-ce
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","ubuntu"]
-  packageName: docker-ce
+  when: ["etcd|master|worker|ingress|storage","ubuntu"]
+  packageName: docker-ee
   anyVersion: true
   shouldNotBeInstalled: true
 
 - kind: PackageDependency
-  when: ["etcd","centos"]
+  when: ["etcd|master|worker|ingress|storage","centos"]
   packageName: docker-engine
   packageVersion: 1.12.6-1.el7.centos
 - kind: PackageDependency
-  when: ["master","centos"]
+  when: ["master|worker|ingress|storage","centos"]
   packageName: kubelet
   packageVersion: 1.8.1-0
 - kind: PackageDependency
-  when: ["master","centos"]
+  when: ["master|worker|ingress|storage","centos"]
   packageName: nfs-utils
   anyVersion: true
 - kind: PackageDependency
-  when: ["master","centos"]
-  packageName: kubectl
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["master","centos"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-1.el7.centos
-- kind: PackageDependency
-  when: ["worker","centos"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-1.el7.centos
-- kind: PackageDependency
-  when: ["ingress","centos"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-1.el7.centos
-- kind: PackageDependency
-  when: ["storage","centos"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-1.el7.centos
-- kind: PackageDependency
-  when: ["worker","centos"]
-  packageName: kubelet
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["worker","centos"]
-  packageName: nfs-utils
-  anyVersion: true
-- kind: PackageDependency
-  when: ["ingress","centos"]
-  packageName: kubelet
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["ingress","centos"]
-  packageName: nfs-utils
-  anyVersion: true
-- kind: PackageDependency
-  when: ["storage","centos"]
-  packageName: kubelet
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["storage","centos"]
-  packageName: nfs-utils
-  anyVersion: true
-- kind: PackageDependency
-  when: ["worker","centos"]
-  packageName: kubectl
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["ingress","centos"]
-  packageName: kubectl
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["storage","centos"]
+  when: ["master|worker|ingress|storage","centos"]
   packageName: kubectl
   packageVersion: 1.8.1-0
 # https://docs.docker.com/engine/installation/linux/docker-ee/centos/
 - kind: PackageDependency
-  when: ["etcd","centos"]
+  when: ["etcd|master|worker|ingress|storage","centos"]
   packageName: docker
   anyVersion: true
   shouldNotBeInstalled: true
 - kind: PackageDependency
-  when: ["master","centos"]
-  packageName: docker
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","centos"]
-  packageName: docker
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","centos"]
-  packageName: docker
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","centos"]
-  packageName: docker
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["etcd","centos"]
+  when: ["etcd|master|worker|ingress|storage","centos"]
   packageName: docker-common
   anyVersion: true
   shouldNotBeInstalled: true
 - kind: PackageDependency
-  when: ["master","centos"]
-  packageName: docker-common
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","centos"]
-  packageName: docker-common
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","centos"]
-  packageName: docker-common
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","centos"]
-  packageName: docker-common
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["etcd","centos"]
+  when: ["etcd|master|worker|ingress|storage","centos"]
   packageName: docker-selinux
   anyVersion: true
   shouldNotBeInstalled: true
 - kind: PackageDependency
-  when: ["master","centos"]
-  packageName: docker-selinux
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","centos"]
-  packageName: docker-selinux
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","centos"]
-  packageName: docker-selinux
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","centos"]
-  packageName: docker-selinux
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["etcd","centos"]
+  when: ["etcd|master|worker|ingress|storage","centos"]
   packageName: docker-engine-selinux
   anyVersion: true
   shouldNotBeInstalled: true
 - kind: PackageDependency
-  when: ["master","centos"]
-  packageName: docker-engine-selinux
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","centos"]
-  packageName: docker-engine-selinux
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","centos"]
-  packageName: docker-engine-selinux
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","centos"]
-  packageName: docker-engine-selinux
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["etcd","centos"]
+  when: ["etcd|master|worker|ingress|storage","centos"]
   packageName: docker-engine
   anyVersion: true
   shouldNotBeInstalled: true
 - kind: PackageDependency
-  when: ["master","centos"]
-  packageName: docker-engine
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","centos"]
-  packageName: docker-engine
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","centos"]
-  packageName: docker-engine
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","centos"]
-  packageName: docker-engine
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["etcd","centos"]
+  when: ["etcd|master|worker|ingress|storage","centos"]
   packageName: docker-ce
   anyVersion: true
   shouldNotBeInstalled: true
 - kind: PackageDependency
-  when: ["master","centos"]
-  packageName: docker-ce
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","centos"]
-  packageName: docker-ce
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","centos"]
-  packageName: docker-ce
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","centos"]
-  packageName: docker-ce
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["etcd","centos"]
-  packageName: docker-ee
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["master","centos"]
-  packageName: docker-ee
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","centos"]
-  packageName: docker-ee
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","centos"]
-  packageName: docker-ee
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","centos"]
+  when: ["etcd|master|worker|ingress|storage","centos"]
   packageName: docker-ee
   anyVersion: true
   shouldNotBeInstalled: true
 
 - kind: PackageDependency
-  when: ["etcd","rhel"]
+  when: ["etcd|master|worker|ingress|storage","rhel"]
   packageName: docker-engine
   packageVersion: 1.12.6-1.el7.centos
 - kind: PackageDependency
-  when: ["master","rhel"]
+  when: ["master|worker|ingress|storage","rhel"]
   packageName: kubelet
   packageVersion: 1.8.1-0
 - kind: PackageDependency
-  when: ["master","rhel"]
+  when: ["master|worker|ingress|storage","rhel"]
   packageName: nfs-utils
   anyVersion: true
 - kind: PackageDependency
-  when: ["master","rhel"]
-  packageName: kubectl
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["master","rhel"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-1.el7.centos
-- kind: PackageDependency
-  when: ["worker","rhel"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-1.el7.centos
-- kind: PackageDependency
-  when: ["ingress","rhel"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-1.el7.centos
-- kind: PackageDependency
-  when: ["storage","rhel"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-1.el7.centos
-- kind: PackageDependency
-  when: ["worker","rhel"]
-  packageName: kubelet
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["worker","rhel"]
-  packageName: nfs-utils
-  anyVersion: true
-- kind: PackageDependency
-  when: ["ingress","rhel"]
-  packageName: kubelet
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["ingress","rhel"]
-  packageName: nfs-utils
-  anyVersion: true
-- kind: PackageDependency
-  when: ["storage","rhel"]
-  packageName: kubelet
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["storage","rhel"]
-  packageName: nfs-utils
-  anyVersion: true
-- kind: PackageDependency
-  when: ["worker","rhel"]
-  packageName: kubectl
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["ingress","rhel"]
-  packageName: kubectl
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["storage","rhel"]
+  when: ["master|worker|ingress|storage","rhel"]
   packageName: kubectl
   packageVersion: 1.8.1-0
 # https://docs.docker.com/engine/installation/linux/docker-ee/rhel/#os-requirements
 - kind: PackageDependency
-  when: ["etcd","rhel"]
+  when: ["etcd|master|worker|ingress|storage","rhel"]
   packageName: docker
   anyVersion: true
   shouldNotBeInstalled: true
 - kind: PackageDependency
-  when: ["master","rhel"]
-  packageName: docker
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","rhel"]
-  packageName: docker
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","rhel"]
-  packageName: docker
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","rhel"]
-  packageName: docker
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["etcd","rhel"]
+  when: ["etcd|master|worker|ingress|storage","rhel"]
   packageName: docker-common
   anyVersion: true
   shouldNotBeInstalled: true
 - kind: PackageDependency
-  when: ["master","rhel"]
-  packageName: docker-common
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","rhel"]
-  packageName: docker-common
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","rhel"]
-  packageName: docker-common
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","rhel"]
-  packageName: docker-common
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["etcd","rhel"]
+  when: ["etcd|master|worker|ingress|storage","rhel"]
   packageName: docker-selinux
   anyVersion: true
   shouldNotBeInstalled: true
 - kind: PackageDependency
-  when: ["master","rhel"]
-  packageName: docker-selinux
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","rhel"]
-  packageName: docker-selinux
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","rhel"]
-  packageName: docker-selinux
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","rhel"]
-  packageName: docker-selinux
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["etcd","rhel"]
+  when: ["etcd|master|worker|ingress|storage","rhel"]
   packageName: docker-engine-selinux
   anyVersion: true
   shouldNotBeInstalled: true
 - kind: PackageDependency
-  when: ["master","rhel"]
-  packageName: docker-engine-selinux
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","rhel"]
-  packageName: docker-engine-selinux
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","rhel"]
-  packageName: docker-engine-selinux
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","rhel"]
-  packageName: docker-engine-selinux
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["etcd","rhel"]
+  when: ["etcd|master|worker|ingress|storage","rhel"]
   packageName: docker-engine
   anyVersion: true
   shouldNotBeInstalled: true
 - kind: PackageDependency
-  when: ["master","rhel"]
-  packageName: docker-engine
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","rhel"]
-  packageName: docker-engine
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","rhel"]
-  packageName: docker-engine
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","rhel"]
-  packageName: docker-engine
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["etcd","rhel"]
+  when: ["etcd|master|worker|ingress|storage","rhel"]
   packageName: docker-ce
   anyVersion: true
   shouldNotBeInstalled: true
 - kind: PackageDependency
-  when: ["master","rhel"]
-  packageName: docker-ce
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","rhel"]
-  packageName: docker-ce
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","rhel"]
-  packageName: docker-ce
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","rhel"]
-  packageName: docker-ce
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["etcd","rhel"]
-  packageName: docker-ee
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["master","rhel"]
-  packageName: docker-ee
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["worker","rhel"]
-  packageName: docker-ee
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["ingress","rhel"]
-  packageName: docker-ee
-  anyVersion: true
-  shouldNotBeInstalled: true
-- kind: PackageDependency
-  when: ["storage","rhel"]
+  when: ["etcd|master|worker|ingress|storage","rhel"]
   packageName: docker-ee
   anyVersion: true
   shouldNotBeInstalled: true
@@ -917,209 +376,53 @@ const upgradeRuleSet = `---
   minimumBytes: 1000000000
 
 - kind: PackageDependency
-  when: ["etcd","ubuntu"]
+  when: ["etcd|master|worker|ingress|storage","ubuntu"]
   packageName: docker-engine
   packageVersion: 1.12.6-0~ubuntu-xenial
 - kind: PackageDependency
-  when: ["master","ubuntu"]
+  when: ["master|worker|ingress|storage","ubuntu"]
   packageName: kubelet
   packageVersion: 1.8.1-00
 - kind: PackageDependency
-  when: ["master","ubuntu"]
+  when: ["master|worker|ingress|storage","ubuntu"]
   packageName: nfs-common
   anyVersion: true
 - kind: PackageDependency
-  when: ["master","ubuntu"]
-  packageName: kubectl
-  packageVersion: 1.8.1-00
-- kind: PackageDependency
-  when: ["master","ubuntu"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-0~ubuntu-xenial
-- kind: PackageDependency
-  when: ["worker","ubuntu"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-0~ubuntu-xenial
-- kind: PackageDependency
-  when: ["ingress","ubuntu"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-0~ubuntu-xenial
-- kind: PackageDependency
-  when: ["storage","ubuntu"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-0~ubuntu-xenial
-- kind: PackageDependency
-  when: ["worker","ubuntu"]
-  packageName: kubelet
-  packageVersion: 1.8.1-00
-- kind: PackageDependency
-  when: ["worker","ubuntu"]
-  packageName: nfs-common
-  anyVersion: true
-- kind: PackageDependency
-  when: ["ingress","ubuntu"]
-  packageName: kubelet
-  packageVersion: 1.8.1-00
-- kind: PackageDependency
-  when: ["ingress","ubuntu"]
-  packageName: nfs-common
-  anyVersion: true
-- kind: PackageDependency
-  when: ["storage","ubuntu"]
-  packageName: kubelet
-  packageVersion: 1.8.1-00
-- kind: PackageDependency
-  when: ["storage","ubuntu"]
-  packageName: nfs-common
-  anyVersion: true
-- kind: PackageDependency
-  when: ["worker","ubuntu"]
-  packageName: kubectl
-  packageVersion: 1.8.1-00
-- kind: PackageDependency
-  when: ["ingress","ubuntu"]
-  packageName: kubectl
-  packageVersion: 1.8.1-00
-- kind: PackageDependency
-  when: ["storage","ubuntu"]
+  when: ["master|worker|ingress|storage","ubuntu"]
   packageName: kubectl
   packageVersion: 1.8.1-00
 
 - kind: PackageDependency
-  when: ["etcd","centos"]
+  when: ["etcd|master|worker|ingress|storage","centos"]
   packageName: docker-engine
   packageVersion: 1.12.6-1.el7.centos
 - kind: PackageDependency
-  when: ["master","centos"]
+  when: ["master|worker|ingress|storage","centos"]
   packageName: kubelet
   packageVersion: 1.8.1-0
 - kind: PackageDependency
-  when: ["master","centos"]
+  when: ["master|worker|ingress|storage","centos"]
   packageName: nfs-utils
   anyVersion: true
 - kind: PackageDependency
-  when: ["master","centos"]
-  packageName: kubectl
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["master","centos"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-1.el7.centos
-- kind: PackageDependency
-  when: ["worker","centos"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-1.el7.centos
-- kind: PackageDependency
-  when: ["ingress","centos"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-1.el7.centos
-- kind: PackageDependency
-  when: ["storage","centos"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-1.el7.centos
-- kind: PackageDependency
-  when: ["worker","centos"]
-  packageName: kubelet
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["worker","centos"]
-  packageName: nfs-utils
-  anyVersion: true
-- kind: PackageDependency
-  when: ["ingress","centos"]
-  packageName: kubelet
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["ingress","centos"]
-  packageName: nfs-utils
-  anyVersion: true
-- kind: PackageDependency
-  when: ["storage","centos"]
-  packageName: kubelet
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["storage","centos"]
-  packageName: nfs-utils
-  anyVersion: true
-- kind: PackageDependency
-  when: ["worker","centos"]
-  packageName: kubectl
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["ingress","centos"]
-  packageName: kubectl
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["storage","centos"]
+  when: ["master|worker|ingress|storage","centos"]
   packageName: kubectl
   packageVersion: 1.8.1-0
 
 - kind: PackageDependency
-  when: ["etcd","rhel"]
+  when: ["etcd|master|worker|ingress|storage","rhel"]
   packageName: docker-engine
   packageVersion: 1.12.6-1.el7.centos
 - kind: PackageDependency
-  when: ["master","rhel"]
+  when: ["master|worker|ingress|storage","rhel"]
   packageName: kubelet
   packageVersion: 1.8.1-0
 - kind: PackageDependency
-  when: ["master","rhel"]
+  when: ["master|worker|ingress|storage","rhel"]
   packageName: nfs-utils
   anyVersion: true
 - kind: PackageDependency
-  when: ["master","rhel"]
-  packageName: kubectl
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["master","rhel"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-1.el7.centos
-- kind: PackageDependency
-  when: ["worker","centos"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-1.el7.centos
-- kind: PackageDependency
-  when: ["ingress","centos"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-1.el7.centos
-- kind: PackageDependency
-  when: ["storage","centos"]
-  packageName: docker-engine
-  packageVersion: 1.12.6-1.el7.centos
-- kind: PackageDependency
-  when: ["worker","rhel"]
-  packageName: kubelet
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["worker","rhel"]
-  packageName: nfs-utils
-  anyVersion: true
-- kind: PackageDependency
-  when: ["ingress","rhel"]
-  packageName: kubelet
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["ingress","rhel"]
-  packageName: nfs-utils
-  anyVersion: true
-- kind: PackageDependency
-  when: ["storage","rhel"]
-  packageName: kubelet
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["storage","rhel"]
-  packageName: nfs-utils
-  anyVersion: true
-- kind: PackageDependency
-  when: ["worker","rhel"]
-  packageName: kubectl
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["ingress","rhel"]
-  packageName: kubectl
-  packageVersion: 1.8.1-0
-- kind: PackageDependency
-  when: ["storage","rhel"]
+  when: ["master|worker|ingress|storage","rhel"]
   packageName: kubectl
   packageVersion: 1.8.1-0
 
